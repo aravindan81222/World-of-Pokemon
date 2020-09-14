@@ -26,30 +26,28 @@ const getData = async (url) => {
 }
 
 router.get('/pokemon', function(req, res, next) {
-  let name = req.param('name');
+  let name = req.param('name').split(' ').join('-').toLowerCase();
   console.log(name);
-
-  const url = `https://api.funtranslations.com/translate/shakespeare.json?text=${name}`;
-  // getData(url);
+  
+  const url = `https://pokeapi.co/api/v2/ability/${name}`;
   request(url, function (error, response, body) {
           console.log('error:', error); // Print the error if one occurred and handle it
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-          res.send(body)
-          // let result = body.contents.translated; 
-          // return res.status(200).json({name: name, description: result});
+          let result = JSON.parse(response.body);
+          let description;
+          result.effect_entries.forEach(element => {
+            if(element.language['name'] == 'en'){
+              description = element.effect;
+            }
+          });
+          const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text=${description}`;
+          request(translateUrl, function(err, req1, res1) {
+            console.log('error:', err); // Print the error if one occurred and handle it
+            console.log('statusCode:', req1 && req1.statusCode); // Print the response status code if a response was received
+            return res.send(res1);
+          });
     });
-  // var request = http.get(`https://api.funtranslations.com/translate/shakespeare.json?text=${name}`, function( req, res, next){
-  //   console.log(res);
-  // })
-  // return res.status(200).json({name: name, description: name});
 });
 
-// function getTranslate(name, next){
-//   router.get(`https://api.funtranslations.com/translate/shakespeare.json?text=${name}`, function(req, res, next) {
-//     let result = res.contents.translated;
-//     return res.status(200).json({name: name, description: result});
-//   });
-
-// }
 
 module.exports = router;
