@@ -5,14 +5,14 @@ An Nodejs application built using Express Framework to return the description of
 
 Prerequisites:
 
-1. node v12.18.3
-2. Visual Studio code/ Atom
+1. node v12+
+2. Visual Studio code/ Atom / any IDE supporting NPM(Node Package Manage)
 
 Steps to run the project:
 
 1. git clone <project url>
 2. npm install
-3. node start bin/www
+3. node bin/www
 
 Launch the application in your browser with the below url:
 

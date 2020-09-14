@@ -3,6 +3,7 @@ var router = express.Router();
 var http = require('http');
 const axios = require('axios');
 var request = require('request');
+var http = require('http');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -40,19 +41,13 @@ router.get('/pokemon', function(req, res, next) {
               description = element.effect;
             }
           });
-          const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text=${description}`;
-          second(translateUrl);      
+          const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text=${description}`; 
+            request(translateUrl,function(err, resp, body1){
+                console.log(resp.body);
+                let desc = resp.body;
+                res.send({name: name, description: desc});
+           }); 
     });
-    var second = function(translateUrl){
-
-      request(translateUrl,function(error, response, data){
-          console.log(response.body);
-          console.log(name);
-          let description = response.body;
-          res.send({name: name, description: description});
-     });
-    }
-    
 });
 
 
