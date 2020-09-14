@@ -3,7 +3,6 @@ var router = express.Router();
 var http = require('http');
 const axios = require('axios');
 var request = require('request');
-var http = require('http');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
