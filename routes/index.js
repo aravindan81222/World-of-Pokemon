@@ -41,12 +41,18 @@ router.get('/pokemon', function(req, res, next) {
             }
           });
           const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text=${description}`;
-          request(translateUrl, function(err, req1, res1) {
-            console.log('error:', err); // Print the error if one occurred and handle it
-            console.log('statusCode:', req1 && req1.statusCode); // Print the response status code if a response was received
-            return res.send(res1);
-          });
+          second(translateUrl);      
     });
+    var second = function(translateUrl){
+
+      request(translateUrl,function(error, response, data){
+          console.log(response.body);
+          console.log(name);
+          let description = response.body;
+          res.send({name: name, description: description});
+     });
+    }
+    
 });
 
 
