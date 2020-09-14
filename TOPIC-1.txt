@@ -1,0 +1,6 @@
+Hi Rory,
+My apologies, Our API access token's are verified that they cannot run in parallel for the same user tokens which apply for all other endpoints too.
+Solution: Register as two different users when using separate applications to avoid such interruptions. 
+Hope this answer helps you out. Feel free to reach us if any queries further.
+Kind Regards,
+Team Truelayer
