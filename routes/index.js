@@ -30,7 +30,7 @@ const getData = async (url) => {
     console.log(url)
     const response = await axios.get(url)
     const data = response.data;
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.log(error)
@@ -55,8 +55,6 @@ router.get('/pokemon', function(req, res, next) {
           // });
 
           const descUrl = `https://pokeapi.co/api/v2/characteristic/${id}`
-
-          // coxnst translateUrl = `https://pokeapi.co/api/v2/ability/${name}`;
           getDesc(descUrl)
           .then((data) => {
             let description;
@@ -69,18 +67,14 @@ router.get('/pokemon', function(req, res, next) {
           })
           .then( (desc) => {
             const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text='${desc}'`;
-            getData(translateUrl)
-            .then(data => res.send({name: name, description: desc}))
-            // res.send({name: name, description: desc})
+            return translateUrl;
           })
-          // .then( data => console.log(data))
-          // .then(desc => res.send({name: name, description: desc.contents.translated}))
-          .catch(err => res.send(err));
-          //   request(translateUrl,function(err, resp, body1){
-          //       console.log(resp.body);
-          //       let desc = resp.body;
-          //       res.send({name: name, description: desc});
-          //  }); 
+          .then(getURL => getData(getURL))
+          .then((data) => {
+            let translatedDesc = data.contents.translated;
+            res.json({name: name, description: translatedDesc})
+          })
+          .catch(err => res.send({success: false, message: 'No Description Found or Exceeded free limit'}));
     });
 });
 
