@@ -14,6 +14,17 @@ router.get('/search', function(req, res, next) {
 });
 
 
+const getDesc = async (url) => {
+  try {
+    console.log(url)
+    const response = await axios.get(url)
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const getData = async (url) => {
   try {
     console.log(url)
@@ -30,23 +41,40 @@ router.get('/pokemon', function(req, res, next) {
   let name = req.param('name').split(' ').join('-').toLowerCase();
   console.log(name);
   
-  const url = `https://pokeapi.co/api/v2/ability/${name}`;
+  const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
   request(url, function (error, response, body) {
           console.log('error:', error); // Print the error if one occurred and handle it
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
           let result = JSON.parse(response.body);
-          let description; 
-          result.effect_entries.forEach(element => {
-            if(element.language['name'] == 'en'){
-              description = element.effect;
-              console.log(description.toString());
-            }
-          });
+          let id  = result.id; 
+          // result.effect_entries.forEach(element => {
+          //   if(element.language['name'] == 'en'){
+          //     description = element.effect;
+          //     console.log(description.toString());
+          //   }
+          // });
 
-          const translateUrl = "https://api.funtranslations.com/translate/shakespeare.json?text='When this Pokémon has 1/3 or less of its HP remaining, its fire-type moves inflict 1.5× as much regular damage.'";
+          const descUrl = `https://pokeapi.co/api/v2/characteristic/${id}`
+
           // coxnst translateUrl = `https://pokeapi.co/api/v2/ability/${name}`;
-          getData(translateUrl)
-          .then(desc => res.send({name: name, description: desc.contents.translated}))
+          getDesc(descUrl)
+          .then((data) => {
+            let description;
+            data.descriptions.forEach(element => {
+                if(element.language['name'] == 'en'){
+                  description = element.description;
+                }
+              });
+              return description;
+          })
+          .then( (desc) => {
+            const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text='${desc}'`;
+            getData(translateUrl)
+            .then(data => res.send({name: name, description: desc}))
+            // res.send({name: name, description: desc})
+          })
+          // .then( data => console.log(data))
+          // .then(desc => res.send({name: name, description: desc.contents.translated}))
           .catch(err => res.send(err));
           //   request(translateUrl,function(err, resp, body1){
           //       console.log(resp.body);
