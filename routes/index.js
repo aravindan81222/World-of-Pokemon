@@ -43,10 +43,10 @@ router.get('/pokemon', function(req, res, next) {
             }
           });
 
-          const translateUrl = `https://api.funtranslations.com/translate/shakespeare.json?text=${description}`;
-          // const translateUrl = `https://pokeapi.co/api/v2/ability/${name}`;
+          const translateUrl = "https://api.funtranslations.com/translate/shakespeare.json?text='When this Pokémon has 1/3 or less of its HP remaining, its fire-type moves inflict 1.5× as much regular damage.'";
+          // coxnst translateUrl = `https://pokeapi.co/api/v2/ability/${name}`;
           getData(translateUrl)
-          .then(desc => res.send(desc))
+          .then(desc => res.send({name: name, description: desc.contents.translated}))
           .catch(err => res.send(err));
           //   request(translateUrl,function(err, resp, body1){
           //       console.log(resp.body);
